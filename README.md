@@ -567,8 +567,6 @@ enum MainDish{
 var dinner : MainDish = MainDish.pizza(dough: "치즈", topping: "베이컨")
 ~~~
 
-
-
 ### 항목 순회
 
 열거형에 포함된 모든 케이스를 알아야 할 경우 열거형에 CaseIterable 프로토콜을 채택하고 allCases라는 이름의 프로퍼티를 사용하여 확인할 수 있습니다.
@@ -703,3 +701,312 @@ print(result) // 18
 ~~~
 
 indirect 키워드는 이진 탐색 트리나 순환 알고리즘을 구현할 때 유용하게 사용할 수 있습니다.
+
+
+
+# 연산자
+
+스위프트의 연산자는 문자로 표현한 함수와 같습니다. 프로그래머의 의도대로 연산자의 역할을 변경할 수 있습니다.
+
+| 분류        | 설명                            | 예시      |
+| :---------- | ------------------------------- | --------- |
+| 단항연산자  | 피연산자가 한 개인 연산자       | !A        |
+| 이항 연산자 | 피연산자가 두 개인 연산자       | A+B       |
+| 삼항 연산자 | 피연산자가 세 개인 연산자       | A ? B : C |
+| 전위 연산자 | 피연산자 앞에 위치하는 연산자   | !A        |
+| 중위 연산자 | 피연산자 사이에 위치하는 연산자 | A+B       |
+| 후위 연산자 | 피연산자 뒤에 위치하는 연산자   | A!        |
+
+피연산자의 개수에 따라 혹은 연산자의 위치에 따라 위와 같이 구분할 수 있습니다.
+
+> 스위프트에서는 띄어쓰기도 중요한 문법 중 하나입니ㅏㄷ. 연산자 앞 뒤중 공백의 위치에 따라 의미가 달라질 수 있기 때문입니다. 항상 연산자 사이사이에 띄어쓰기를 넣는 습관을 들이도록 합시다
+
+## 연산자의 종류
+
+### 할당 연산자
+
+값을 할당할 때 사용하는 연산자입니다.
+
+| 연산자      | 부호  | 설명                                                         |
+| ----------- | ----- | ------------------------------------------------------------ |
+| 할당 연산자 | A = B | A에 B의 값을 할당합니다. ( 서로 다른 데이터 타입인 경우 오류) |
+
+### 산술 연산자
+
+| 연산자 | 부호  | 설명                       |
+| ------ | ----- | -------------------------- |
+| 더하기 | A + B | A와 B를 더한 값을 반환     |
+| 빼기   | A - B | A에서 B를 뻰 값을 반환     |
+| 곱하기 | A * B | A와 B를 곱한 값을 반환     |
+| 나누기 | A / B | A를 B로 나눈 값을 반환     |
+| 나머지 | A % B | A를 B로 나눈 나머지를 반환 |
+
+> ##### 스위프트의 나머지 연산자와 나누기 연산자
+>
+> 스위프트에서는 부동소수점 타입의 나머지 연산까지 지원합니다. 
+>
+> ~~~swift
+> var number:Double = 5.0
+> var result : Double = number.truncatingRemainder(dividingBy: 1.5) // 0.5
+> result = 12.truncatingRemainder(dividingBy: 2.5) // 2.0
+> ~~~
+>
+> 나누기 연산은 소수점을 제외한 정수를 결과값으로 반환합ㄴ디ㅏ.
+>
+> ~~~swift
+> var result2:Int = 5 / 3 // 1
+> result = 10 / 3 // 3
+> ~~~
+>
+> 스위프트에서는 서로 다른 자료형끼리의 연산을 엄격하게 제한합ㄴ디ㅏ. .심지어 Int와 UInt끼리도 타입캐스팅을 해 주어야 연산이 가능합니다.
+
+### 비교 연산자
+
+| 연산자           | 부호    | 설명                                                         |
+| ---------------- | ------- | ------------------------------------------------------------ |
+| 값이 같다        | A == B  | A와 B가 같은 값인지 비교하여 불리언 값을 반환                |
+| 값이 크거나 같다 | A >= B  | A가 B보다 크거나 같은 값인지 비교하여 불리언 값을 반환       |
+| 값이 작거나 같다 | A <= B  | A가 B보다 작거나 같은 값인지 비교하여 불리언 값을 반환       |
+| 값이 크다        | A > B   | A가 B보다 큰 값인지 비교하여 불리언 값을 반환                |
+| 값이 작다        | A < B   | A가 B보다 작은 값인지 비교하여 불리언 값을 반환              |
+| 값이 같지 않다   | A != B  | A와 B가 다른 값인지 비교하여 불리언 값을 반환                |
+| 참조가 같다      | A === B | A와 B가 참조(레퍼런스)타입일 때<br /> A와B가 같은 인스턴스를 가리키는지 비교하여 불리언 값을 반환 |
+| 참조가 같지 않다 | A !== B | A와 B가 참조(레퍼런스)타입일 때<br /> A와B가 다른 인스턴스를 가리키는지 비교하여 불리언 값을 반환 |
+| 패턴 매치        | A ~= B  | A와 B의 패턴이 매치되는지 확인하여 불리언 값을 반환          |
+
+> ##### 참조 비교
+>
+> 스위프트의 참조 타입인 클래스의 인스턴스에서 참조 비교 연산자를 사용합니다.
+>
+> ~~~swift
+> let val1 = 3
+> let val2 = 5
+> let val3 = 5
+> 
+> let isSameValueAB: Bool = val1 == val2 // false
+> let isSameValueBC: Bool = val2 == val3 // true
+> class SomeClass{
+>   
+> }
+> let refA : SomeClass = SomeClass()
+> let refB : SomeClass = SomeClass()
+> let refC : SomeClass = refA
+> 
+> let isSameRefAB : Bool = refA === refB // false
+> let isSameRefAC : Bool = refA === refC // true
+> 
+> ~~~
+
+### 삼항 조건 연산자
+
+| 연산자           | 부호      | 설명                              |
+| ---------------- | --------- | --------------------------------- |
+| 삼항 조건 연산자 | Q ? A : B | Q가 참이면 A를, 거짓이면 B를 반환 |
+
+삼항 조건 연산자를 이용하면 조건식을 한 줄에 표현할 수 있습니다.
+
+~~~swift
+var BiggerValue : Int = val1 > val3 ? val1 : val3
+~~~
+
+### 범위 연산자
+
+| 연산자             | 부호    | 설명                                                  |
+| ------------------ | ------- | ----------------------------------------------------- |
+| 폐쇄 범위 연산자   | A...B   | A부터 B까지의 수를 묶어 범위를 표현(A,B 포함)         |
+| 반폐쇄 범위 연산자 | A..< B  | A부터 B 미만의 수를 묶어 범위를 표현 (A포함, B불포함) |
+| 단방향 범위 연산자 | A ....  | A 이상의 수를 묶어 범위를 표현                        |
+|                    | ...A    | A 이하의 수를 묶어 범위를 표현                        |
+|                    | ... < A | A 미만의 수를 묶어 범위를 표현                        |
+
+### 부울 연산자
+
+| 연산자 | 표현     | 설명                               |
+| ------ | -------- | ---------------------------------- |
+| NOT    | !B       | B의 참, 거짓을 반                  |
+| AND    | A && B   | A와 B의 AND연산을 실행한 값을 반환 |
+| OR     | A \|\| B | A와 B의 OR 연산을 실행한 값을 반환 |
+
+### 비트 연산자
+
+| 연산자 | 표현                | 설명                                     |
+| ------ | ------------------- | ---------------------------------------- |
+| NOT    | ~A                  | A의 비트를 반전한 결과를 반환            |
+| AND    | A & B               | A와 B의 비트AND연산을 실행한 결과를 반환 |
+| OR     | A \| B              | A와 B의 비트OR연산을 실행한 결과를 반환  |
+| XOR    | A ^ B               | A와 B의 비트XOR연산을 실행한 결과를 반환 |
+| Shift  | A >> B<br /> A << B | A의 비트를 B만큼 이동한 결과를 반환      |
+
+### 복합 할당 연산자
+
+| 표현    | 같은 표현  |
+| ------- | ---------- |
+| A += B  | A = A + B  |
+| A -= B  | A = A - B  |
+| A *= B  | A = A * B  |
+| A /= B  | A = A / B  |
+| A %= B  | A = A % B  |
+| A <<= N | A = A << N |
+| A >>= N | A = A >> N |
+| A &= B  | A = A & B  |
+| A \|= B | A = A \| B |
+| A ^= B  | A = A ^ B  |
+
+### 오버플로 연산자
+
+오버플로우 가능성이 있는 연산에서는 추가 알고리즘 및 로직을 설계하여 연산하는것이 일반적이지만 swift에서는 기본 연산자를 통해 오버플로에 대비할 수 있습니다..
+
+| 연산자            | 부호 | 설명                     |
+| ----------------- | ---- | ------------------------ |
+| 오버플로우 더하기 | &+   | 오버플로우에 대비한 덧셈 |
+| 오버플로우 빼기   | &-   | 오버플로우에 대비한 뺄셈 |
+| 오버플로우 곱하기 | &*   | 오버플로우에 대비한 곱셈 |
+
+~~~swift
+var unsignedInt : UInt8 = 0
+let errerUnderFlow : UInt8 = unsignedInt - 1 // 런타임 오류
+let underFlow : UInt8 = unsignedInt &- 1 // 255
+~~~
+
+### 기타 연산자
+
+스위프트 라이브러리에 기본적으로 정의된 기타 연산자
+
+| 연산자                  | 부호   | 설명                                    |
+| ----------------------- | ------ | --------------------------------------- |
+| nil 병합 연산자         | A ?? B | A가 nil이면 B, 아니면 A를 반환          |
+| 부호변경 연산자         | -A     | A의 부호를 변경                         |
+| 옵셔널 강제 추출 연산자 | O!     | 강제 옵셔널 바인딩                      |
+| 옵셔널 연산자           | O?     | O를 안전하게 추출 / O가 옵셔널임을 표현 |
+
+## 사용자 정의 연산자
+
+스위프트에서는 연산자의 역할을 부여하여 사용자 정의 연산자 기호를 만들 수 있습니다.
+
+### 전위 연산자 구현
+
+Int타입의 제곱을 구하는 **전위 연산자를 정의하고 구현해보고자 합니다.
+
+~~~swift
+// 정의
+prefix operator **
+~~~
+
+이제 정의된 연산자에 기능을 추가해주어야 합니다.
+
+~~~swift
+prefix func ** (val : Int) -> Int {
+  return val * val
+}
+print(**(-5))  //25
+~~~
+
+전위 연산자에 기능을 추가할 때는 따로 연산자를 정의하지 않고 함수만 중복 정의하면 됩니다. 
+
+~~~swift
+prefix func **(val : String) -> String {
+  return val + "  " + val
+}
+print(**(-5))  //25
+print(**"안녕") // 안녕   안녕
+~~~
+
+### 후위 연산자 구현
+
+Int 타입의 값에 10을 더한 값을 반환하는 ** 후위 연산자를 구현해보고자 합니다..
+
+~~~swift
+postfix operator **
+
+postfix func ** (val : Int) -> Int {
+  return val + 10
+}
+print(10**) // 20
+~~~
+
+하나의 피연산자에 전위 연산과 후위 연산을 사용하게 되면 후위 연산을 먼저 수행합니다.
+
+~~~swift
+print(**10**) // 400
+~~~
+
+### 중위 연산자 구현
+
+중위 연산자는 우선순위 그룹을 명시해 줄 수 있습니다. precedencegruop 뒤에 그룹 이름을 써주어 정의할 수 있습니다. 
+
+~~~pseudocode
+precedencegroup 우선순위 그룹 이름 {
+		higherThan: 더 낮은 우선순위 그룹
+		lowerThan : 더 높은 우선순위 그룹
+		associativity : 결합 방향 (left/right/none)
+		assignment : 할당방향 사용 ( true / false )
+}
+~~~
+
+연산자 우선순위 그룹은 중위 연산자에서만 사용됩니다.  assignment의 경우 true일 경우 옵셔널 체이닝을 할 때 오른쪽부터 옵셔널 체이닝이 시작된다는 것을 의미합니다.
+
+만약 중위 연산자를 정의할 때 우선순위 그룹을 명시해주지 않는다면 우선순위가 가장 높은 DefaultPrecedence 그룹을 가지게 됩니다.
+
+~~~swift
+infix operator ** : MultiplicationPrecedence
+func ** (lhs : String, rhs : String) -> Bool {
+  return lhs.contains(rhs)
+}
+print("hello world" ** "world")
+~~~
+
+연산자를 새로 정의한 데이터 타입에서 유용하게 사용할 수 있습니다.
+
+~~~swift
+class Car {
+  var modelYear : Int?
+  var modelName : String?
+}
+struct SmartPhone {
+  var company : String?
+  var model : String?
+}
+func == (lhs : Car, rhs : Car) -> Bool {
+  return lhs.modelName == rhs.modelName
+}
+func == (lhs : SmartPhone, rhs : SmartPhone) -> Bool {
+  return lhs.model == rhs.model
+}
+
+let myCar = Car()
+myCar.modelName = "S"
+
+let yourCar = Car()
+yourCar.modelName = "S"
+
+var myPhone = SmartPhone()
+myPhone.model = "11"
+
+var yourPhone = SmartPhone()
+yourPhone.model = "s10"
+
+print(myCar == yourCar)
+print(myPhone == yourPhone)
+~~~
+
+타입 내부에 타입 매서드로 연산자 함수를 정의할 수 있습니다.
+
+~~~swift
+class Car {
+  var modelYear : Int?
+  var modelName : String?
+  
+  static func == (lhs : Car, rhs : Car) -> Bool {
+    return lhs.modelName == rhs.modelName
+  }
+}
+
+struct SmartPhone {
+  var company : String?
+  var model : String?
+  
+  static func == (lhs : SmartPhone, rhs : SmartPhone) -> Bool {
+    return lhs.model == rhs.model
+  }
+}
+~~~
