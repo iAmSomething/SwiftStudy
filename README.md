@@ -1010,3 +1010,297 @@ struct SmartPhone {
   }
 }
 ~~~
+
+
+
+# 흐름 제어
+
+특정 명령들을 반복해서 실행해야 하는 경우 조건문과 반복문을 통해 처리합니다. 스위프트의 흐름 제어 구문에서는 소괄호를 대부분 생략할 수 있습니다. 중괄호는 생략할 수 없습니다.
+
+## 조건문
+
+조건문에서는 **if** 구문과 **switch** 구문을 소개합니다.
+
+### if 구문
+
+다른 언어에서는 정수 실수 등 0이 아닌 모든 값을 참으로 취급하여 조건 값이 될 수 있지만, swift에서는 항상 Bool 타입이어야 합니다.
+
+~~~swift
+let first = 5
+let second = 7
+if first > second {
+  print("first > second")
+} else if first < second {
+  print("first < second")
+} else {
+  print("first == second")
+}
+~~~
+
+else if 는 몇 개가 이어져도 상관 없으며 else 는 없어도 상관없습니다. else if 조건을 충족하면 다음 else if 조건에 충족되더라도 실행되지 않고 조건문을 빠져나옵니다.
+
+~~~swift
+var biggerVal = 0
+if first > second{
+  biggerVal = first
+} else if first == second {
+  biggerVal = first
+} else if first < second {
+  biggerVal = second
+} else if first == 5 { //이 조건이 충족되지만 실행되지 않는다
+  biggerVal = 100
+}
+print(biggerVal) // 7
+~~~
+
+### switch 구문
+
+보통 switch 문에서는 break 키워드를 사용하는데 swift에서는 break키워드 사용은 선택 사항입니다. case 내부의 코드를 모두 실행하면 switch 문이 종료됩니다. 그래서 일부러 break를 사용하지 않고 case를 연속 수행하던 트릭을 사용하지 못합니다. 이런 방식을 사용하려면 fallthrough 키워드를 사용합니다.
+
+C언어와는 다르게 swift에서는 정수 타입 외에도 다양한 타입의 값이 들어갈 수 있습니다. 비교할 값이 열거형과 같은 한정된 값이 아닐 때는 꼭 default를 작성해주어야 합니다.  또 각 case에는 범위 연산자를 사용할 수도, where절을 사용하여 조건을 확장시킬 수 있습니다.
+
+~~~swift
+let integerValue : Int = 5
+switch integerValue {
+case 0:
+  print("value == zero")
+case 1...10:   // 범위 연산자를 사용
+  print("value == 1~10")
+  fallthrough  //다음 case도 실행
+case Int.min..<0, 101..<Int.max :
+  print("value < 0 or Value > 100")
+  break
+default:
+  print("10 < value <= 100")
+}
+
+//value == 1~10
+//value < 0 or Value > 100
+~~~
+
+부동소수 타입이나  String 타입의 데이터도 switch 문에 사용할 수 있습니다. 심지어는 튜플도 사용이 가능합니다.
+
+~~~swift
+switch tupleVal {
+case ("김태훈", 25) :
+  print("나야나")
+default :
+  print("누구")
+}
+~~~
+
+튜플의 경유 **와일드카드 식별자**와 함께 사용하면 더 유용합니다.
+
+~~~swift
+switch tupleVal {
+case ("김태훈", 23):
+  print("나야나")
+case ("김태훈 ", _) :
+  print("이름만 맞음")
+case (_, 25) :
+  print("나이만") //이게 실행됨
+default:
+  print("누구?")
+}
+~~~
+
+와일드카드 식별자를 사용하면 무시된 값을 직접 가져와야 하는 불편함도 생깁니다.. 그래서 미리 지정된 조건 값을 제외한 다른 값은 실행문 안으로 가져올 수 있습니다. let을 붙인 값 바인딩을 사용합니다.
+
+~~~swift
+switch tupleVal {
+case ("김태훈", 24):
+  print("나야나")
+case ("김태훈", let age) :
+  print("이름만 맞음 \(age)") // 이게 실행됨
+case (let name, 25) :
+  print("나이만 \(name)")
+default:
+  print("누구?")
+}
+~~~
+
+where 키워드를 사용하여  case문의 조건을 확장할 수 있습니다.
+
+~~~swift
+let 직급 :String = "사원"
+let 연차 : Int = 1
+let 인턴인지 : Bool = false
+
+switch 직급 {
+case "사원" where 인턴인지 == true:
+  print("인턴입니다.")
+case "사원" where 연차 < 2 && 인턴인지 == false:
+  print("신입사원입니다.")
+case "사원" where 연차 > 5:
+  print("인턴입니다.")
+case "사원" :
+  print("사원입니다.")
+case "대리" :
+  print("대리입니다.")
+default:
+  print("그럼뭔데")
+}
+~~~
+
+열거형의 경우 모든 case에 대항하는 블럭을 구현하였다면 default를 구현하지 않나도 됩니다.
+
+~~~swift
+enum School {
+  case primary, elementary, middle, high, college, university, graduate
+}
+let 최종학력 :School = School.university
+
+switch 최종학력 {
+case .primary:
+  print("유치원")
+case .elementary :
+  print("초등학교")
+case .middle :
+  print("중학교")
+case .high :
+  print("고등학교")
+case .college :
+  print("대학")
+case .university :
+  print("대학교")
+case .graduate :
+  print("대학원")
+}
+~~~
+
+나중에 열거형에 case를 추가하면 기존의 switch 구문은 컴파일 오류가 발생할 것입니다.  그래서 이런 경우를 대비하기 위해서 swift5.0버전에서 추가된 unknown 속성을 사용해 이런 문제를 대처할 수 있게 도와줍니다.
+
+~~~swift
+enum Menu {
+  case chicken
+  case pizza
+}
+let lunchMenu : Menu = .chicken
+switch lunchMenu {
+case .chicken:
+  print("칰힌")
+case .pizza :
+  print("pizza")
+case _:
+  print("메뉴가 뭔지")
+}
+~~~
+
+이렇게 와일드카드 case를 만들어서 case추가에 대해 대응할 수 있지만, 만약에  열거형 case를 추가하고 switch의 해당 case문을 수정하지 않았다면 컴파일러도 잡지 못하는 논리 오류를 불러일으키게 됩니다. 이런 문제를 해결하기 위해서  @unknown 속성을 사용합니다.
+
+~~~swift
+enum Menu {
+  case chicken
+  case pizza
+  case hamburger
+}
+let lunchMenu : Menu = .hamburger
+switch lunchMenu {
+case .chicken:
+  print("칰힌")
+case .pizza :
+  print("pizza")
+@unknown case _:
+  print("메뉴가 뭔지")
+}
+~~~
+
+이렇게 unknown속성을 사용 할 경우 다음과 같은 wraning이 발생하기 때문에 나중에 디버깅할 때 한번 더 확인할 수 있게 됩니다.
+
+![image-20200731143102150](https://tva1.sinaimg.cn/large/007S8ZIlgy1gha3dx3kcxj314y08mtap.jpg)
+
+unknown속성을 부여한 case는 가장 마지막  case로 작성하여야 합니다.
+
+## 반복문
+
+이렇게 조건을 통해 명령어를 분기했다면, 같거나 비슷한 명령을 반복해야 할 때는 반복문을 사용합니다. 특히나 배열처럼 sequence가 있는 데이터는 반복문으로 편리하게 처리할 수 있습니다.
+
+### for in 구문
+
+for in 반복 구문은 다른 언어에서의  for each와 비슷합니다. 
+
+~~~pseudocode
+for 임시 상수 in 시퀀스 아이템 {
+  실행 코드
+}
+~~~
+
+다음과 같은 방식으로 사용됩니다.
+
+~~~swift
+for i in 0...5 {
+  if i.isMultiple(of: 2){
+    print(i) // 0,2,4
+  }
+}
+for char in "안녕하세요" {
+  print(char) //한글자씩 나옴
+}
+var result = 1
+for _ in 1...3 { // 와일드카드 식별자를 이용할 수 있다
+  result *= 10
+}
+print(result) // 1000
+~~~
+
+for in 구문은 swift의 기본 컬렉션 타입에서도 유용하게 사용할 수 있습니다.
+
+~~~swift
+let friends : [String : Int] = ["김태훈" : 25, "노한솔" : 26, "나무": 7]
+for tuple in friends{
+  print(tuple)
+}
+for (key, val) in friends {
+  print(key)
+  print(val)
+}
+~~~
+
+### while 구문
+
+while 구문도 for 구문과 다르지 않습니다. 조건은 Bool 타입으로 지정되어야 하며 continue, break 등을 사용할 수 있습니다.
+
+~~~swift
+var names : [String] = ["a","b","c","d","e"]
+
+while names.isEmpty == false {
+  print("bye \(names.removeFirst())")
+}
+print()
+names = ["a","b","c","d","e"]
+repeat {
+  print("bye \(names.removeFirst())")
+} while names.isEmpty == false
+~~~
+
+repeat while구문은 do while구문과 다르지 않습니다. repeat 블록의 코드를 1회 실행하고  while 조건문을 거칩니다.
+
+## 구문 이름표
+
+반복문을 작성하다 보면 여러 겹의 반복문을 사용하는 경우가 많이 발생합니다. 이 때 반복문을 제어하는 break, continue 가 어떤 범위에 적용되어야 하는지 애매하거나 실수가 발생할 수 있습니다. 그래서 구문의 이름을 지정해주면 구문 이름표를 사용할 수 있습니다. 
+
+~~~swift
+var numbers:[Int] = [3,2342,6,3252]
+
+numberLoop: for num in numbers {
+  if num > 5 || num < 1 {
+    continue numberLoop
+  }
+  
+  var count : Int = 0
+  printLoop : while true {
+    print(num)
+    count += 1
+    if count == num {
+      break printLoop
+    }
+  }
+  removeLoop : while true {
+    if numbers.first != num {
+      break numberLoop
+    }
+    numbers.removeFirst()
+  }
+}
+~~~
+
