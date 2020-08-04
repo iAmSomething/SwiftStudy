@@ -1304,3 +1304,327 @@ numberLoop: for num in numbers {
 }
 ~~~
 
+--------
+
+# 함수
+
+함수는 작업의 가장 작은 단위이자 하나의 작은 프로그램이기도 합니다. 함수는 프로그램을 이루는 주된 요소 중 하나인데, 스위프트에서 함수는 하나의 값으로도 사용할 수 있습니다. 
+
+스위프트에서 함수는 다른 언어에서의 함수보다 다양한 모습으로 존재하며, 코딩 스타일도 여러 가지입니다. 따라서 개인이나 협업자끼리 **코딩 규칙**을 만들고 함수를 사용하기를 권합니다.
+
+## 함수와 메서드
+
+함수와 메서드는 상황이나 위치에 따라 다른 용어로 부르는 것일 뿐 기본적으로 같습니다. 
+
+- 구조체 클래스 열거형 등 특정 타입에 연관되어 사용하는 함수를 **메서드**라고 부릅니다.
+- 모듈 전체에서 전역적으로 사용할 수 있는 함수를 그냥 **함수**라고 부릅니다.
+
+함수가 위치하거나 사용되는 범위에 따라 호칭이 달라질 뿐 함수라는것은 변함이 없습니다.
+
+## 함수의 정의와 호출
+
+스위프트에서 함수는 **재정의**(override)와 **중복 정의**(overload)를 모두 지원합니다. 따라서 매개변수의 타입이 다르면 같은 이름의 함수르르여러 개 만들 수 있고, 매개변수의 개수가 달라도 같은 이름의 함수를 만들 수 있습니다.
+
+### 기본적인 함수의 정의와 호출
+
+기본적으로는 함수의 이름과 매개변수, 반환 타입등을 사용하여 함수를 정의합니다.
+
+함수를 저으이하는 키워드는 func입니다 .함수 이름을 지정해준 후 매개변수는 소괄호로 감싸주고, 반환 타입을 명시하기 위해서 ->를 사용하여 어떤 타입이 반환될 것인지 명시해줍니다. 반환 키워드는 return입니다.
+
+~~~pseudocode
+func 함수 이름(매개변수 ...) -> 반환 타입 {
+    실행 구문
+    return 반환 값	
+}
+~~~
+
+스위프트에서 기본 형태의 함수 정의와 사용
+
+~~~~swift
+func hello (name : String) -> String {
+  return "hello \(name)"
+}
+let helloJenny : String = hello(name: "Jenny")
+print(helloJenny)
+~~~~
+
+기본 형태는 다른 프로그래밍 언어와 비슷합니다.
+
+### 매개변수
+
+스위프트의 매개변수를 어떻게 정의하냐에 따라서도 모습이 크게 달라질 수 있습니다.
+
+#### 매개변수가 없는 함수와 매개변수가 여러개인 함수
+
+매개변수가 필요 없다면 매개변수 위치를 공란으로 비워 둡니다.
+
+~~~swift
+func helloWorld() -> String {
+  return "Hello, world!"
+}
+print(helloWorld())
+
+~~~
+
+매개변수를 여러 개 사용하려면 쉼표로 매개변수를 구분합니다. 주의할 점은 함수를 호출할 때 매개변수 이름을 붙여주고 :을 사용하여 전달인자를 보내준다는 점입니다. 
+
+~~~swift
+func sayHello(myName : String, yourName: String) -> String{
+  return "hello \(yourName)!, I'm \(myName)"
+}
+print(sayHello(myName: "김태훈", yourName: "탱구"))
+~~~
+
+#### 매개변수 이름과 전달인자 레이블
+
+매개변수 이름과 더불어 전달인자 레이블을 지정해줄 수 있습니다. 보통 함수를 정의할 때 매개변수를 정의하면 매개변수 이름과 전달인자 레이블은 같은 이름으로 사용할 수 있지만, 전달인자 레이블을 별도로 지정하면 함수 외부에서 매개변수의 역할을 좀 더 명확히 할 수 있습니다.
+
+~~~swift
+func sayHello(from myName : String, to yourName: String) -> String{
+  return "hello \(yourName)!, I'm \(myName)"
+}
+print(sayHello(from: "김태훈", to: "탱구"))
+~~~
+
+기존의 읜어들처럼 전달인자 레이블을 사용하고 싶지 않다면 와일드카드 식별자를 사용할 수 있습니다.
+
+~~~swift
+func sayHello(_ myName : String, _ yourName: String) -> String{
+  return "hello \(yourName)!, I'm \(myName)"
+}
+print(sayHello("김태훈", "탱구"))
+~~~
+
+이렇게 전달인자 레이블을 변경하면 함수이름이 변경됩니다. 즉 전달인자 레이블만 다르게 써준 함수도 오버로드로 동작할 수 있습니다.
+
+~~~swift
+func sayHello(to name:String, _ times:Int) -> String{
+  var result :String = ""
+  for _ in 0..<times {
+    result += "hello \(name)" + " "
+  }
+  return result
+}
+func sayHello(to name:String, repeatCount times : Int) -> String{
+  var result : String = ""
+  for _ in 0..<times{
+    result += "Hello \(name)!" + " "
+  }
+  return result
+}
+
+print(sayHello(to: "탱구", 3))
+print(sayHello(to: "탱구", repeatCount: 3))
+~~~
+
+#### 매개변수 기본값
+
+스위프트 함수에서는 매개변수마다 기본값을 지정할 수 있습니다. 즉 매개변수가 전달되지 않으면 기본값을 사용합니다. 예를 들어 위에 작성한 함수에서 repeatCount 값을 3으로 기본값을 지정해 주면 함수를 호출 할 때 매개변수를 넘겨 주지 않아도 3으로 설정해 함수를 실행합니다.
+
+~~~swift
+func sayHello(_ name :String, times : Int = 3) -> String{
+  var result : String = ""
+  for _ in 0..<times{
+    result += "Hello \(name)!" + " "
+  }
+  return result
+}
+print(sayHello("탱구"))
+print(sayHello("탱구", times : 5))
+~~~
+
+기본값이 없는 매개변수를 기본값이 있는 매개변수 앞에 사용하세요 기본값이 없는 매개변수는 함수를 사용함에 잇어 중요한 값을 전달할 가능성이 높습니다. 무엇보다 기본값이 있는지와 상관 없이 중요한 매개변수는 앞쪽에 뱊치하는 것이 좋습니다.
+
+#### 가변 매개변수와 입출력 매개변수
+
+매개변수로 몇 개의 값이 들어올 지 모를 때 가변 매개변수를 사용할 수 있습니다. .가변 매개변수는 0개 이상의 값을 받아올 수 있으며, 가변 매개변수로 들어온 인자 값은 배열처럼 사용할 수 있습니다. 함수마다 가변 매개변수는 하나만 가질 수 있습니다.
+
+~~~swift
+func sayHelloToFriends(me :String, friends names : String...) -> String{
+  var result : String = ""
+  for friend in names{
+    result += "Hello \(friend)! "
+  }
+  result += "I'm \(me)"
+  return result
+}
+print(sayHelloToFriends(me: "김태훈", friends: "a","b","c","d"))
+~~~
+
+함수의 전달인자로 값을 전달할 때는 보통 값을 복사해서 전달합니다. 값이 아닌 참조를 전달하려면 입출력 매개변수를 사용합니다. 값 타입 데이터의 참조를 전달인자로 보내면 함수 내부에서 참조하여 원래 값을 변경합니다. 하지만 이 방법은 함수 외부의 값에 어떤 영향을 줄 지 모르기 때문에 지양하는 패턴입니다.
+
+~~~swift
+var numbers : [Int] = [1,2,3]
+func nonReferenceParameter ( _ arr : [Int]){
+  var copieArr : [Int] = arr
+  copieArr[1] = 1
+}
+func referenceParameter(_ arr : inout [Int]){
+  arr[1] = 1
+}
+nonReferenceParameter(numbers)
+print(numbers)
+referenceParameter(&numbers)
+print(numbers)
+
+~~~
+
+입출력 매개변수는 메모리 안전을 위협할 수 있기 때문에 몇몇 제약이 있습니다.
+
+### 반환이 없는 함수
+
+반환 값이 굳이 필요하지 않은 함수의 경우 반환 타입을 Void로 표기하거나, 생략하면 됩니다.
+
+~~~swift
+func sayHelloWorld(){
+  print("Hello world")
+}
+sayHelloWorld()
+~~~
+
+### 데이터 타입으로의 함수
+
+스위프트의 함수는 일급 객체이므로 하나의 데이터 타입으로 사용할 수 있습니다. 각 함수는 매개변수 타입과 반환 타입으로 구성된 하나의 타입으로 사용할 수 있다는 뜻입니다.
+
+~~~swift
+typealias CalculateTwoInts = (Int, Int) -> Int // 두 개의 int를 받아 하나의 int를 반환하는 함수를 타입 별칭 짓기를 통해 관리한다.
+
+func addTwoInts(_ a : Int, _ b : Int) -> Int {
+  return a + b
+}
+func multiplyTwoInts(_ a : Int, _ b : Int) -> Int {
+  return a * b
+}
+
+var mathFunction : CalculateTwoInts = addTwoInts
+print(mathFunction(2, 5)) // 7
+mathFunction = multiplyTwoInts
+print(multiplyTwoInts(2, 5)) // 10
+~~~
+
+> ##### 매개변수 타입과 반환 타입
+>
+> 함수형 프로그래밍에서 특정 로직에 관여할 함수의 매개변수와 반환 타입은 매우 종요합니다. 타입 별칭을 통해 손쉽게 함수를 관리할 수 있으며 매개변수와 반환 타입만 잘 연계된다면 굉장히 훌륭한 패턴을 완성할 수 있습니다.
+
+전달 인자로 함수를 전달받는 경우도 있습니다.
+
+~~~swift
+func printMathResult(_ mathFunc : CalculateTwoInts, _ a : Int, _ b : Int) {
+  print("result: \(mathFunc(a,b))")
+}
+printMathResult(addTwoInts,3, 5)
+~~~
+
+특정 조건에 따라 다른 함수를 반환해줄 수 있습니다.
+
+~~~swift
+func chooseMathFunc( _ toAdd : Bool)->CalculateTwoInts {
+  return toAdd ? addTwoInts : multiplyTwoInts
+}
+printMathResult(chooseMathFunc(true), 3, 5)
+~~~
+
+> ##### 전달인자 레이블과 함수 타입
+>
+> 전달인자 레이블은 함수 타입의 구성요소가 아니므로 함수 타입을 작성할 때는 전달인자 레이블을 써줄 수 없습니다.
+>
+> let someFunc : (lhs : Int, rhs : Int) -> Int //오류
+>
+> let someFunc : (_ lhs : Int, _ rhs : Int) -> Int // 오류 아님
+>
+> let someFunc : (Int, Int) -> Int // 오류 아님
+
+## 중첩 함수
+
+스위프트는 데이터 타입의 중첩이 자유롭습니다. 예를 들어 열거형 안에 또 다른 열거형이 들어갈 수 있고 클래스 안에 또 다른 클래스가 들어올 수 있습니다. 함수도 마찬가지로 함수 안에 함수가 들어올 수 있습니다.
+
+중첩 함수는 상위 함수의 블록 내부에서만 사용할 수 있습니다. 
+
+~~~swift
+typealias MoveFunc = (Int) -> Int
+
+func functionForMove(_ shouldGoLeft : Bool) -> MoveFunc {
+  func goRight(_ currentPosition : Int) -> Int{ //중첩 함수
+    return currentPosition + 1
+  }
+  func goLeft(_ currentPosition : Int) -> Int{ //중첩 함수
+    return currentPosition - 1
+  }
+  return shouldGoLeft ? goLeft :  // 함수 내부에서만 쓰인다
+}
+
+var position = -4
+
+let moveToZero : MoveFunc = functionForMove(position > 0)
+while(position != 0) {
+  print("\(position)...")
+  position = moveToZero(position)
+}
+~~~
+
+전역함수가 많은 프로젝트에서는 전역으로 사용이 불필요한 함수들을 사용 범위를 명확하고 깔끔하게 표현해 줄 수 있습니다.
+
+## 종료되지 않는 함수
+
+스위프트에는 return되지 않는 함수가 있습니다. 
+
+종료되지 않는다는 의미는 정상적으로 끝나지 않는 함수라는 뜻입니다. 이를 비반환 함수/매서드 라고 합니다. 비반환 함수 안에서는 오류를 던진다던가 중대한 시스템 오류를 보고하는 일을 하고 프로세스를 종료해 버립니다.. 비반환 함수는 어디서든 호출이 가능하고 guard구문의 else블록에서도 호출할 수 있습니다.
+
+비반환 함수는 반환 타입을 Never라고 명시해 주면 됩니다.
+
+~~~swift
+func crashAndBurn() -> Never {
+  fatalError("Something very, very ba happened")
+}
+crashAndBurn()
+
+func someFunction(isAllIswell:Bool) {
+  guard isAllIswell else {
+    print("에러")
+    crashAndBurn()
+  }
+  print("all is well")
+}
+
+someFunction(isAllIswell: true) // all is well
+someFunction(isAllIswell: false) // 에러
+// 프로세스 종료 후 오류 보고
+~~~
+
+Never 타입이 스위프트 표준 라이브러리로 사용되는 대표적인 예로 fatalError함수가 있습니다.
+
+## 반환 값을 무시할 수 있는 함수
+
+프로그래머가 의도적으로 함수의 반환 값을 사용하지 않을 경우 컴파일러가 함수의 결과 값을 사용하지 않았다는 경고를 보낼 때도 있습니다. 이 때 함수의 반환 값을 무시해도 된다는  @discardableResult 선언속성을 사용하면 됩니다.
+
+~~~swift
+func say(_ something:String) -> String{
+  print(something)
+  return something
+}
+@discardableResult func discardableResultSay(_ something : String) -> String{
+  print(something)
+  return something
+}
+say("hello") // 컴파일러가 경고를 표시할 수 있음
+discardableResultSay("hello")
+~~~
+
+# 옵셔널
+
+옵셔널은 스위프트의 특징 중 하나인 안전성을 문법으로 담보하는 기능입니다. 단어 뜻 그대로 '선택적인', 즉 값이 '있을수도, 없을수도 있음'을 나타내는 표현입니다. 변수나 상수의 값이 nil일 수도 있다는 것을 의미합니다.
+
+## 옵셔널 사용
+
+옵셔널은 해당 변수 또는 상수에 값이 있을지 보장할 수 없는 경우 사용합니다.
+
+~~~swift
+var name : String = "김태훈"
+name = nil // 오류
+var myName : String? = "김태훈"
+myName = nil
+~~~
+
+nil은 옵셔널로 선언된 곳에서만 사용될 수 있습니다. 옵셔널 변수 또는 상수 등은 데이터 타입 뒤에 ?를 붙여 표현해줍니다.
+
+옵셔널은 변수나 상수의 값이 잘못된 값인 경우 함수의 매개변수로 쓰이거나 다른 프로퍼티등을 사용할 때 오류를 반환할 수도 있기 때문에 이를 명시적으로 처리하기 위해 사용됩니다..
