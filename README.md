@@ -1628,3 +1628,364 @@ myName = nil
 nil은 옵셔널로 선언된 곳에서만 사용될 수 있습니다. 옵셔널 변수 또는 상수 등은 데이터 타입 뒤에 ?를 붙여 표현해줍니다.
 
 옵셔널은 변수나 상수의 값이 잘못된 값인 경우 함수의 매개변수로 쓰이거나 다른 프로퍼티등을 사용할 때 오류를 반환할 수도 있기 때문에 이를 명시적으로 처리하기 위해 사용됩니다..
+
+# 구조체와 클래스
+
+객체지향 프로그래밍 패러다임을 사용하는 프로그래머라면 클래스를 사용하여 데이터를 구조화하여 관리해 본 경험이 있을 것입니다. 스위프트에서 구조체와 클래스는 모습과 문법이 거의 흡사합니다. 차이점이 있다면 구조체의 인스턴스는 **값 타입**이고, 클래스의 인스턴스는 **참조 타입**이라는 것입니다.
+
+## 구조체
+
+구조체를 어떻게 정의하고 인스턴스를 어떻게 생성하는지, 그리고 구조체를 어떻게 활용하는지 알아보겠습니다. 아래 예시를 통해 구조체의 기본적인 구조를 확인할 수 있습니다.
+
+~~~swift
+struct BasicInformation {
+  var name:String
+  var age:Int
+}
+~~~
+
+구조체의 블럭 안에는 프로피티나 메서드들을 선언할 수 있습니다.
+
+### 구조체 인스턴스의 생성 및 초기화
+
+구조체를 정의하고, 인스턴스를 생성하여 초기화하고자 할 때 기본적으로 생서오디는 멤버와이즈 이니셜라이저라는 것을 사용합니다. 구조체에 매개변수는 프로퍼티 이름으로 자동 지정됩니다.
+
+인스턴스가 생성되고 초기화된 후 프로퍼티 값에 접근하고 싶으면 마침표를 사용하면 됩니다.
+
+~~~swift
+var myInfo : BasicInformation = BasicInformation(name: "김태훈", age: 25) // 자동으로 구조체 내부의 프로퍼티의 이름으로 이니셜라이저를 구성합니다.
+myInfo.name = "나무"
+myInfo.age = 26
+~~~
+
+이렇게 기본적으로 적용되는 멤버와이즈 이니셜라이저 외에도 사용자 정의 이니셜라이저를 구현할 수 있습니다.
+
+## 클래스
+
+swift에서 클래스는 부모클래스가 없더라도 상속 없이 단독으로 정의가 가능합니다.
+
+> ##### 클래스 명명법
+>
+> 클래스는 새로운 타입을 생성해주는 것과 마찬가지이므로 UpperCamelCase를 사용하여 명명하여줍니다.
+
+클래스의 정의 방법은 다음과 같습니다.
+
+~~~pseudocode
+class 클래스 이름 : 부모 클래스 이름 {
+	프로퍼티 밑 메서드
+}
+~~~
+
+클래스를 정의하는 방식이 위에서 사용한 구조체와 매우 흡사하다는 것을 알 수 있습니다. 여타 다른 객체지향 패러다임 언어들처럼 상속을 받을 수 있는데, 이 때는 콜론을 써주고 상속받을 부모클래스 이름을 명시합니다.
+
+~~~swift
+class Person {
+  var height : Float = 0.0
+  var weight : Float = 0.0
+}
+~~~
+
+### 클래스 인스턴스의 생성과 초기화
+
+클래스를 정의한 후 인스턴스를 생성하고 초기화하고자 할 때 기본적인 이니셜라이저를 사용합니다. 위에서 작성한 Person 클래스의 경우 프로퍼티의 기본값이 지정되어 있으니 따로 초깃값을 전달해주지 않아도 됩니다.
+
+인스턴스가 초기화된 후 프로퍼티의 값에 접근하고 싶다면 마침표를 사용하여 접근하면 됩니다. 여기서 구조체와 다른 점은 클래스는 **참조 타입**이므로 선언한 인스턴스를 let으로 선언하더라도 내부 프로퍼티의 값을 변경할 수 있다는 것입니다.
+
+~~~swift
+var thkim:Person = Person()
+thkim.height = 100
+thkim.weight = 50
+
+let 김나무:Person = Person() 
+김나무.weight = 6.0 //let으로 선언한 인스턴스의 프로퍼티를 변경할 수 있다.
+~~~
+
+마찬가지로 사용자가 직접 이니셜라이저를 정의해 줄 수 있습니다.
+
+### 클래스 인스턴스의 소멸
+
+클래스의 인스턴스는 **참조 타입**이기 때문에 더 이상 참조가 필요 없을 때 메모리에서 해제됩니다. 이 때 클래스 내부에 deinit 메서드를 구현해 주면 클래스가 소멸되기 직전 deinit 메서드를 호출합니다. 이렇게 호출되는 메서드를 디이니셜라이저라고 부릅니다. 이러한 디이니셜라이저 메서드는 클래스당 하나만 구현할 수 있으며, 매개변수와 반환값을 가질 수 없습니다. 
+
+~~~swift
+class Person {
+  var height : Float = 0.0
+  var weight : Float = 0.0
+  
+  deinit {
+    print("클래스가 소멸됩니다.")
+  }
+}
+
+
+var thkim:Person? = Person()
+thkim?.height = 100
+thkim?.weight = 50
+thkim = nil //이 때 클래스가 반환되며 디이니셜라이저를 호출합니다.
+~~~
+
+보통 deinit 메서드에는 인스턴스가 메모리에서 해제되기 직전에 처리할 코드를 넣어줍니다. 예를 들면 인스턴스 소멸 전에 데이터를 저장한다던가, 다른 객체에 인스턴스 소멸을 알려야 할 때 많이 사용합니다.
+
+## 구조체와 클래스의 차이
+
+구조체와 클래스는 다음과 같은 공통점들을 갖습니다.
+
+* 값을 저장하기 위해 **프로퍼티**를 정의할 수 있습니다.
+* 기능 실행을 위해 **메서드**를 정의할 수 있습니다.
+* 서브스크립트 문법을 통해 구조체 또는 클래스가 같는 프로퍼티에 접근하도록 서브스크립트를 정의할 수 있습니다.
+* 초기화될 때의 상태를 지정하기 위해 **이니셜라이저**를 정의할 수 있습니다.
+* 초기구현과 더불어 새로운 기능 추가를 위해 **익스텐션**을 통해 확장할 수 있습니다.
+* 특정 기능을 실행하기 위해 특정 **프로토콜**을 준수할 수 있습니다..
+
+하지만 다음과 같은 차이점을 가집니다.
+
+* 구조체는 **상속**할 수 없습니다.
+* 타입캐스팅은 클래스의 인스턴스에만 허용됩니다.
+* 디이니셜라이저는 클래스의 인스턴스에서만 활용할 수 있습니다.
+* 참조 횟수 계산은 클래스의 인스턴스에만 적용됩니다.
+
+가장 차이점을 보이는 부분은 타입에 대한 부분입니다. 
+
+### 값 타입과 참조 타입
+
+구조체는 값 타입이고 클래스는 참조 타입입니다. 이 둘의 가장 큰 차이는 '무엇이 전달되느냐'입니다. 어떤 함수의 전달 인자로 값 타입을 넘긴다면 **전달될 값이 복사**되어 넘어갑니다. 그러나 참조 타입이 전달인자로 전달될 때는 **전달될 값의 주소**가 전달됩니다. C언어에서 사용되는 포인터와 유사한 개념입니다.
+
+~~~swift
+struct BasicInformation {
+  var name:String
+  var age:Int
+}
+
+var myInfo : BasicInformation = BasicInformation(name: "김태훈", age: 25)
+myInfo.name = "나무"
+myInfo.age = 26
+
+var friendInfo : BasicInformation = myInfo // 값 타입이기 때문에 전달될 값이 복사되어 넘어갑니다.
+
+print(friendInfo.name) // 나무
+print(myInfo.name) // 나무
+
+friendInfo.name = "탱구" // 전달된 값을 바꾸어도 원래 값에 영향을 주지 않습니다.
+
+print(friendInfo.name) // 탱구
+print(myInfo.name) // 나무
+
+class Person {
+  var height : Float = 0.0
+  var weight : Float = 0.0
+}
+
+var me : Person = Person()
+var friend : Person = me // 참조 타입이기 때문에 주소값이 전달됩니다.
+
+print(me.height) // 0
+print(friend.height) // 0
+
+friend.height = 100 // 해당 값을 바꾸면 주소값에 있는 프로퍼티의 값을 바꿉니다.
+
+print(me.height) // 100
+print(friend.height) // 100
+
+func changeBasicInfo(_ info : BasicInformation) {
+  var copiedInfo : BasicInformation = info
+  copiedInfo.age = 1
+}
+func changePersonInfo(_ info : Person) {
+  info.height = 200
+}
+
+changeBasicInfo(myInfo) 
+print(myInfo.age) // 26
+
+changePersonInfo(me)
+print(me.height) // 200
+~~~
+
+클래스의 인스턴스끼리 참조가 같은지 확인하기 위해 식별 연산자를 사용합니다. 식별 연산자를 통해 두 참조가 같은 인스턴스를 가리키고 있는지 비교해보는 코드입니다.
+
+~~~swift
+var me : Person = Person()
+var friend : Person = me
+var anotherFriend : Person = Person()
+print(me === friend) //true
+print(me === anotherFriend) // false
+~~~
+
+>##### 스위프트의 기본 데이터 타입은 모두 구조체입니다.
+>
+>스위프트 표준 라이브러리에는 여러 데이터타입들이 구현되어 있는데 Int Bool Float 등등 기본 데이터 타입들은 전부 구조체로 구현되어 있습니다.
+
+## 구조체와 클래스 선택하는 기준
+
+애플의 가이드라인에서는 다음 조건 중 하나 이상에 해당된다면 구조체를 사용하는 것을 권장합니다.
+
+* 연관된 간단한 값의 집합을 캡슐화할 때
+* 캡슐화 한 값을 복사하는것이 합당할 때
+* 구조체에서 저장된 프로퍼티가 값 타입이며, 참조하는 것이 합당하지 않을 때
+* 다른 타입으로부터 상속받거나 상속할 필요가 없을 때
+
+# 프로퍼티와 메서드
+
+**프로퍼티**란 클래스나 구조체 또는 열거형 등에 관련된 값을 의미합니다. 메서드는 앞에 함수파트에서 설명한 것 처럼 클래스나 구조체 등에서 사용되는 함수를 뜻합니다.
+
+## 프로퍼티
+
+프로퍼티는 크게 **저장 프로퍼티**, **연산 프로퍼티**, **타입 프로퍼티**로 나뉩니다. 
+
+저장 프로퍼티는 인스턴스의 변수 또는 상수를 의미합니다. 연산 프로퍼티는 값을 저장한 것이 아니라 특정 연산을 실행한 결과값을 의미합니다. 특정 타입에 사용되는 프로퍼티도 있는데 이를 타입 프로퍼티라고 합니다.
+
+| 프로퍼티 종류 | 의미                                                | 사용되는 영역          |
+| ------------- | --------------------------------------------------- | ---------------------- |
+| 저장 프로퍼티 | 상수나 변수 처럼 특정 타입의 값을 저장하는 프로퍼티 | 구조체, 클래스         |
+| 연산 프로퍼티 | 특정 연산을 실행한 결괏값을 나타내는 프로퍼티       | 구조체, 클래스, 열거형 |
+| 타입 프로퍼티 | 특정 타입에 사용되는 프로퍼티                       | 클래스                 |
+
+프로퍼티의 값이 변하는 것을 감시하는 프로퍼티 감시자도 있습니다. 프로퍼티 감시자는 값의 변화에 따른 특정 작업을 수행합니다. 프로퍼티 감시자는 저장 프로퍼티에 적용할 수 있으며 부모클래스로부터 상속받을 수 있습니다.
+
+### 저장 프로퍼티
+
+var 혹은 let 키워드를 통해 선언하는 변수 및 상수 값을 저장하는 프로퍼티입니다. 저장 프로퍼티를 정의할 때 기본값과 초기값을 지정해 줄 수 있습니다.
+
+> 구조체는 저장 프로퍼티가 옵셔널이 아니더라도, 저장 프로퍼티를 모두 포함하는 이니셜라이저를 자동으로 생성합니다. 하지만 클랫의 경우 저장 프로퍼티가 옵셔널이 아니라면 프로퍼티 기본값을 지정해 주거나 사용자 정의 이니셜라이저를 작성하여 초기화해주어야 합니다.
+>
+> 또한 클래스 인스턴스의 상수 프로퍼티는 인스턴스가 초기화 될 때 한 번만 값을 할당할 수 있으며, 자식클래스에서 이 값을 재정의 할 수 없습니다.
+
+~~~swift
+struct CoordinatePoint {
+  var x : Int
+  var y : Int
+}
+let myPoint : CoordinatePoint = CoordinatePoint(x: 10, y: 5)
+
+class Position {
+  var point : CoordinatePoint
+  let name : String
+  init (name : String, currentPoint : CoordinatePoint){ // 저장 프로퍼티의 기본값을 지정해주지 않았기 때문에 이니셜라이저를 작성
+    self.name = name
+    self.point = currentPoint
+  }
+}
+let myPosition : Position = Position(name: "김태훈", currentPoint: myPoint) // 사용자 정의 이니셜라이저를 호출해야 합니다.
+~~~
+
+구조체는 프로퍼티에 맞는 이니셜라이저를 자동으로 제공하지만 클래스는 사용자 지정 이니셜라이저를 작성해주어야 합니다. 
+
+인스턴스를 생성할 때 이니셜라이저를 통해 초깃값을 보내야 하는 이유는 프로퍼티가 **옵셔널이 아닌 값**으로 선언되어 있기 때문입니다. 프로퍼티의 값이 옵셔널이라면 초깃값을 넣어주지 않아도 됩니다.
+
+~~~swift
+class Position2{
+  var point : CoordinatePoint?
+  let name :String
+  init (name : String){
+    self.name = name
+  }
+}
+
+let myPosition2 : Position2 = Position2(name: "김태훈")
+myPosition2.point = CoordinatePoint(x: 4, y: 3)
+
+~~~
+
+이렇게 옵셔널과 이니셜라이저를 적절히 사용하면 구조체와 클래스를 의도했던 대로 작성할 수 있게 됩니다.
+
+### 지연 저장 프로퍼티
+
+인스턴스에서 값이 필요할 때 값이 할당되는 지연 저장 프로퍼티가 있습니다.. 지연 저장 프로퍼티는 호출이 있어야 값을 초기화하며, 이 때 lazy라는 키워드를 사용합니다.
+
+상수는 인스턴스가 완전히 생성되기 전에 초기화해야 하므로 지연 저장 프로퍼티와는 맞지 않아 변수들만 지연 저장 프로퍼티로 활용합니다. 
+
+지연 저장 프로퍼티는 주로 복잡한 클래스나 구조체를 구현할 때 많이 사용됩니다. 클래스 인스턴스의 저장 프로퍼티로 다른 클래스의 인스턴스나 구조체 인스턴스를 할당할 때 지연 저장 프로퍼티를 활용하여 불필요한 성능 저하나 공간 낭비를 줄일 수 있습니다.
+
+~~~swift
+class Position2{
+  lazy var point : CoordinatePoint = CoordinatePoint()
+  let name :String
+  init (name : String){
+    self.name = name
+  }
+}
+~~~
+
+> 다중 스레드 환경에서 지연 저장 프로퍼티에 동시다발적으로 접근할 때는 한 번만 초기화된다는 보장이 없습니다.많은 스레드가 비슷한 시점에 지연 저장 프로퍼티에 접근한다면 여러 번 초기화 될 수 있으니 사용에 주의해야 합니다.
+
+### 연산 프로퍼티
+
+연산 프로퍼티는 실제 값을 저장하는 프로퍼티가 아니라, 특정 상태에 따른 값을 연산하는 프로퍼티입니다.. 인스턴스의 내/외부 값을 연산하여 적절한 값을 돌려주는 getter의 역할이나, 내부의 프로퍼티 값을 간접적으로 설정하는 setter의 역할을 할 수도 있습니다.
+
+메서드를 두고 연산 프로퍼티를 사용하는 데 의문이 들 수 있습니다. 메서드를 통해 인스턴스 내부에 접근하려면 접근자와 설정자를 구현해야 합니다. 이를 감수하고 메서드로 구현한다 하더라도 두 메서드가 분산 구현되어서 코드의 가독성이 나빠집니다.
+
+~~~swift
+//메서드로 구현한 경우
+struct CoordinatePoint {
+  var x : Int
+  var y : Int
+  
+  //접근자
+  func oppositePoint() -> Self {
+    return CoordinatePoint(x: -x, y: -y)
+  }
+  //설정자
+  mutating func setOppositePoint(_ oppsite : CoordinatePoint){
+    x = -oppsite.x
+    y = -oppsite.y
+  }
+}
+
+var myPoint : CoordinatePoint = CoordinatePoint(x: 10, y: 5)
+print(myPoint)
+print(myPoint.oppositePoint())
+
+myPoint.setOppositePoint(CoordinatePoint(x: 15, y: 10))
+print(myPoint)
+~~~
+
+oppsitePoint() 메서드를 통해 대칭점을 구할 수 있으며, setOppsitePoint(_ :)를 통해 대칭점을 설정해주어야 합니다.
+
+이 경우 접근자와 설정자가 분리되어 코드를 한번에 이해하기 어렵습니다.
+
+~~~swift
+struct CoordinatePoint2 {
+  var x : Int
+  var y : Int
+  var oppsitePoint : CoordinatePoint{ // 연산 프로퍼티
+    //접근자
+    get {
+      return CoordinatePoint(x : -x, y : -y)
+    }
+    //설정자
+    set(oppsite) {
+      x = -oppsite.x
+      y = -oppsite.y
+    }
+  }
+}
+var myPoint2 : CoordinatePoint2 = CoordinatePoint2(x: 10, y: 20)
+print(myPoint2)
+print(myPoint2.oppsitePoint)
+myPoint2.oppsitePoint = CoordinatePoint(x: 15, y: 10)
+print(myPoint2)
+~~~
+
+이런 식으로ㅓ 연산 프로퍼티를 사용하면 하나의 프로퍼티에 접근자와 설정자가 모두 모여있고, 각각의 역할이 명확하게 표현됩니다. 
+
+설정자의 매개변수로 원하는 이름을 소괄호 안에 명시해주면 set 메서드 내부에서 잔달받은 전달인자를 사용할 수 있습니다. 관용적인 표현으로newValue로 매개변수 이름을 대신할 수 있습니다. 그럴 경우에는 매개변수를 따로 표기하지 말아야 합니다.
+
+접근자 내부의 코드가 단 한 줄이고, 그 결괏값의 타입이 프로퍼티의 타입과 같다면 return 키워드를 생략해도 됩니다.
+
+~~~swift
+struct CoordinatePoint2 {
+  var x : Int
+  var y : Int
+  var oppsitePoint : CoordinatePoint{ // 연산 프로퍼티
+    get {
+      CoordinatePoint(x : -x, y : -y)
+    }
+    set {
+      x = -newValue.x
+      y = -newValue.y
+    }
+  }
+}
+~~~
+
+연산 프로퍼티를 읽기 전용으로만 구현하려면 get 메서드만 사용하면 됩니다.
+
